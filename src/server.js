@@ -2,8 +2,18 @@
 const express = require('express')
 const connect = require('./connect/connect')
 const app = express()
+const Register = require('./routers/Authentication')
+const Fine = require('./routers/fine')
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 
+// middleware function
+app.use('/api/auth', Register)
+app.use('/api/fine', Fine)
+
+
+ 
 
 // Connect to Database
 void (async () => { // void function does not return any value , it mean that the function does cannot be stored in a variable 

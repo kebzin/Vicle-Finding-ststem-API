@@ -1,7 +1,7 @@
 
 const  mongoose = require('mongoose');
 
-const transportationSchema = new mongoose.Schema({
+const PoliceStation = new mongoose.Schema({
     finedId: {type: String,}, 
     officersId: {type: mongoose.Schema.Types.ObjectId, ref : 'officers'},
 
