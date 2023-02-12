@@ -2,8 +2,8 @@
 const  mongoose = require('mongoose');
 
 const transportationSchema = new mongoose.Schema({
-    finedId: {type: String,}, 
-    officersId: {type: mongoose.Schema.Types.ObjectId, ref : 'officers'},
+    fineId: {type: String,}, 
+    officerId: {type: mongoose.Schema.Types.ObjectId, ref : 'officers'},
 
     
 

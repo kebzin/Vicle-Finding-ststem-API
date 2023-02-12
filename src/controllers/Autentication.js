@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const officers = require('../models/officers')
+const dotenv = require('dotenv')
 
 
 // register officer function
@@ -68,7 +69,7 @@ const login = async (req, res, next)=>{
         const token = jwt.sign({ id: Officers._id }, 'secretkey')
             return res.cookie('access_token', token, {
                 httOnly: true
-            }).status(200).json({officer: Officers})
+        }).status(200).json({message: "Login successfull.....!", officer: Officers})
 
     }catch(e){
         console.log(e);
@@ -83,7 +84,7 @@ const login = async (req, res, next)=>{
 const logout = async(req, res) => {
     try {
         
-     await res.clearCookies("access_token", {
+     await res.clearCookie("access_token", {
         secure: true,
         sameSite: 'none',
       }).status(200).json({message: 'Logout successful'});

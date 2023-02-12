@@ -4,13 +4,11 @@ const driversSchema  = new mongoose.Schema({
    
     driversFirstName: {type: 'string',},
     driversLastName: {type:'string',},
-    driversEmail: {type:'string',},
     driversPhone: {type:'string',},
     driversAddress: {type:'string',},
     driversLicensNumber: {type:'string',},
     driversCarNumberPlate: {type:'string',},
     FineID: {type: mongoose.Schema.Types.ObjectId, ref: 'fine'},
-
 
 
 

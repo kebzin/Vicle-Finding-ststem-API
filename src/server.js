@@ -2,8 +2,11 @@
 const express = require('express')
 const connect = require('./connect/connect')
 const app = express()
+
 const Register = require('./routers/Authentication')
 const Fine = require('./routers/fine')
+const officers = require('./routers/officers');
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -11,6 +14,7 @@ app.use(express.urlencoded({ extended: true }))
 // middleware function
 app.use('/api/auth', Register)
 app.use('/api/fine', Fine)
+app.use('/api/officers', officers)
 
 
  

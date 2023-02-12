@@ -3,8 +3,15 @@ const mongoose = require('mongoose');
 const finedSchema = new mongoose.Schema({
     fineName:{type: 'string',},
     fineDescription:{type: 'string',},
-    fineAmount:{type: 'number',},
-    officersId:{type: mongoose.Schema.Types.ObjectId, ref: 'officers'},
+    fineAmount:{type: Number},
+    officerId:{type: mongoose.Schema.Types.ObjectId, ref: 'officers'},
+    Longitude : {type: Number},
+    Latitude : {type: Number},
+    // bonuse : (fineAmount)=>{
+    //     // calculate the bonus value of the fineAmount
+        
+
+    // }
     
 
 },{timeseries: true});
