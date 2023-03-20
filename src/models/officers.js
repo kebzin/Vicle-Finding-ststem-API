@@ -4,7 +4,7 @@ const OfficerSchema = new mongoose.Schema(
   {
     firstName: { type: String },
     lastName: { type: String },
-    gender: { type: String },
+    location: { type: String },
     PoliceStation: { type: String },
     role: { type: String, default: "Employee" },
     rank: { type: String },

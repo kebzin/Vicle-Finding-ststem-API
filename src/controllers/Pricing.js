@@ -44,14 +44,18 @@ const deletePrice = async (req, res) => {
   const content = req.body;
   const id = req.params.id;
   try {
-    const AuthorizeUser = await offesers.findById(id).exec();
-    if (!AuthorizeUser)
-      return res.status(404).json({ message: "User not found" });
-    if (AuthorizeUser.role !== "Administrator")
-      return res.status(401).json({ message: "you are not authorized" });
-    const DeletePrice = await Pricing.findByIdAndDelete({
-      AdminID: content.AdminID,
-    });
+    console.log(req.body.AdminID);
+    console.log(id);
+
+    // const Authorizeperson = await offesers
+    //   .findById({ _id: content.AdminID })
+    //   .exec();
+    // if (!Authorizeperson)
+    //   return res.status(404).json({ message: "user not found" });
+    // if (Authorizeperson.status === "Administrator")
+    //   return res.status(404).json({ message: "You  are not an authorized " });
+
+    const DeletePrice = await Pricing.findByIdAndDelete({ _id: id });
     res.status(200).json({ DeletePrice });
   } catch (error) {
     console.log(error.message);
@@ -59,8 +63,39 @@ const deletePrice = async (req, res) => {
   }
 };
 
+// update price
+const updatePrice = async (req, res) => {
+  const content = req.body;
+  const id = req.params.id;
+  const Authorizeperson = await offesers
+    .findById({ _id: content.AdminID })
+    .exec();
+  if (!Authorizeperson)
+    return res.status(404).json({ message: "user not found" });
+  // if (Authorizeperson.status === "Administrator")
+  //   return res.status(404).json({ message: "You  are not an authorized " });
+
+  const UpdateItem = await Pricing.findByIdAndUpdate(
+    { _id: id },
+    { ...content },
+    {
+      new: true,
+    }
+  ).exec();
+  if (!UpdateItem)
+    return res
+      .status(404)
+      .json({ message: "The item you requested was not found." });
+
+  res.status(200).json({ UpdateItem });
+
+  try {
+  } catch (error) {}
+};
+
 module.exports = {
   AddPricing,
   getAllPrices,
   deletePrice,
+  updatePrice,
 };

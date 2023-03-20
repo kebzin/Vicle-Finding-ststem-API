@@ -8,6 +8,7 @@ const finedSchema = new mongoose.Schema(
     officerId: { type: mongoose.Schema.Types.ObjectId, ref: "officers" },
     Longitude: { type: Number },
     Latitude: { type: Number },
+    discription: { type: String },
 
     // bonuse : (fineAmount)=>{
     //     // calculate the bonus value of the fineAmount

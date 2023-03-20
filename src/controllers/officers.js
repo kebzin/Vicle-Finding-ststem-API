@@ -8,7 +8,7 @@ const getOffesers = async (req, res) => {
     const Officers = await offesers.find().lean().exec();
     if (!Officers) return "There is no offesers available";
 
-    res.status(200).json({ Officers: Officers });
+    res.status(200).json(Officers);
   } catch (error) {
     console.log();
     res.status(500).json({ message: error.message });
@@ -20,7 +20,7 @@ const getSingleOffeser = async (req, res) => {
   const id = req.params.id;
   try {
     const Officer = await offesers.findById({ _id: id }).exec();
-    if (!Officer) return "There  officers is not available";
+    if (!Officer) return "This  officers is not available";
 
     res.status(200).json(Officer);
   } catch (error) {
@@ -77,7 +77,7 @@ const updateOffeser = async (req, res) => {
   const content = req.body;
   try {
     const Offeser = await offesers
-      .findByIdAndUpdate(content.OfficersId, content, { new: true })
+      .findByIdAndUpdate(content.OfficersId, ...content, { new: true })
       .exec();
     if (!Offeser) return res.status(400).json({ message: "user not found" });
     res.status(200).json({ message: "update successfully", data: Offeser });

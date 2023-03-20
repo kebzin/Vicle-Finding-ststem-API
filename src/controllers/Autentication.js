@@ -32,9 +32,10 @@ const registerOfficer = async (req, res, next) => {
       password: hashedPassword,
       role: content.role,
       PoliceStation: content.PoliceStation,
-      dateOfBirth: content.dateOfBirth,
-      gender: content.gender,
+
+      location: content.location,
       PhoneNumber: content.PhoneNumber,
+      rank: content.Rank,
     });
     await newOfficer.save();
     res.status(201).json({
@@ -84,7 +85,7 @@ const login = async (req, res, next) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "20s" }
+      { expiresIn: "2m" }
     );
     // refresh token
     const refreshToken = jwt.sign(
