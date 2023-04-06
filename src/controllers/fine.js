@@ -12,7 +12,7 @@ const Fine = async (request, response, next) => {
   console.log(content.officerId);
 
   try {
-    const officersID = await officers.findById(content.officerId);
+    const officersID = await officers.findById({ _id: id });
     if (!officersID) {
       return response.status(401).json({
         message: "user not found",
@@ -21,15 +21,17 @@ const Fine = async (request, response, next) => {
 
     // making fine
     const Fine = await Fines.create({
-      officerId: content.officerId,
+      officerId: id,
       ...content,
     });
-    const drivers = await Drivers.create({
-      FineID: (content.FineID = Fine._id),
-      ...content,
-    });
+    console.log("content", content);
+    // await Fine.save();
+    // const drivers = await Drivers.create({
+    //   FineID: (content.FineID = Fine._id),
+    //   ...content,
+    // });
     const Trnsaction = await transaction.create({
-      officerId: content.officerId,
+      officerId: id,
       fineId: (content.fineId = Fine._id),
       ...content,
     });
@@ -40,7 +42,7 @@ const Fine = async (request, response, next) => {
 
     return response
       .status(200)
-      .json({ messsage: Fine, drivers: drivers, transactions: Trnsaction });
+      .json({ messsage: Fine, transactions: Trnsaction });
   } catch (error) {
     console.log(error);
     return response.status(500).json({
@@ -49,4 +51,64 @@ const Fine = async (request, response, next) => {
   }
 };
 
-module.exports = { Fine };
+// get all the fines
+const getAllFne = async (req, res) => {
+  const content = await req.body;
+  const id = req.params.id;
+
+  const AllFine = await Fines.find().populate("officerId");
+  if (AllFine.length === 0)
+    return res.status(404).json({ message: "No fine avelable " });
+  res.status(200).json(AllFine);
+};
+
+const getAllFineMyFine = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const fine = await Fines.find({ officerId: id }).populate("officerId");
+    if (!fine) res.status(404).json({ message: "No fine found" });
+    return res.status(200).json(fine);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const DeletingFine = async (req, res) => {
+  const id = req.params.id;
+  const content = req.body;
+  try {
+    const fine = await Fines.findByIdAndDelete({ _id: id });
+    if (!fine)
+      return res.status(404).json({
+        message: "Didn't delete , because there was no matching found",
+      });
+
+    res.status(200).json({ message: " Deleted successfully" });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+//  get a single fine
+const GetSingleFine = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const fine = await Fines.findById({ _id: id }).populate("officerId");
+    if (!fine)
+      return res.status(404).json({
+        message:
+          "The request Id you passed in is not fount, This is usually because you the Id number yo are comming with is invalid. Pleade check the Id number correctly and try again",
+      });
+    return res.status(200).json(fine);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = {
+  Fine,
+  getAllFne,
+  getAllFineMyFine,
+  DeletingFine,
+  GetSingleFine,
+};

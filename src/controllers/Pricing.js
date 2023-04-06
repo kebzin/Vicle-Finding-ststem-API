@@ -35,7 +35,7 @@ const getAllPrices = async (req, res) => {
     const prices = await Pricing.find();
     res.json(prices);
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
   }
 };
 

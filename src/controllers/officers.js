@@ -6,7 +6,7 @@ const Transaction = require("../models/transaction");
 const getOffesers = async (req, res) => {
   try {
     const Officers = await offesers.find().lean().exec();
-    if (!Officers) return "There is no offesers available";
+    if (!Officers) return "There is no officers available";
 
     res.status(200).json(Officers);
   } catch (error) {
@@ -75,12 +75,12 @@ const deleteOffeser = async (req, res) => {
 // update user account
 const updateOffeser = async (req, res) => {
   const content = req.body;
+  const id = req.params.id;
   try {
-    const Offeser = await offesers
-      .findByIdAndUpdate(content.OfficersId, ...content, { new: true })
-      .exec();
-    if (!Offeser) return res.status(400).json({ message: "user not found" });
-    res.status(200).json({ message: "update successfully", data: Offeser });
+    const user = await offesers.findById({ _id: id });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    offesers.findByIdAndUpdate({ _id: id }, content, { new: true }).exec();
+    res.status(200).json({ message: "update successfully" });
   } catch (error) {
     console.log();
     res.status(500).json({ message: error.message });

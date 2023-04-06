@@ -2,20 +2,26 @@ const mongoose = require("mongoose");
 
 const finedSchema = new mongoose.Schema(
   {
-    fineName: { type: "string" },
-    fineDescription: { type: "string" },
-    fineAmount: { type: Number },
+    OffenceCommited: { type: String },
+    fineDescription: { type: String },
+    LicenNumber: { type: String },
+    NumberPlat: { type: String },
+    fineAmount: { type: String },
     officerId: { type: mongoose.Schema.Types.ObjectId, ref: "officers" },
-    Longitude: { type: Number },
-    Latitude: { type: Number },
+    Longitude: { type: String, default: "" },
+    Latitude: { type: String, default: "" },
     discription: { type: String },
+    status: { type: String, default: "pending" },
+    wanted: { type: Boolean },
+    category: { type: String, default: "" },
+    amountPaid: { type: String, default: "GMD 0" },
 
     // bonuse : (fineAmount)=>{
     //     // calculate the bonus value of the fineAmount
 
     // }
   },
-  { timeseries: true }
+  { timestamps: true }
 );
 
 finedSchema.set("toJSON", {
