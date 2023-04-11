@@ -14,7 +14,7 @@ const finedSchema = new mongoose.Schema(
     status: { type: String, default: "pending" },
     wanted: { type: Boolean },
     category: { type: String, default: "" },
-    amountPaid: { type: String, default: "GMD 0" },
+    amountPaid: { type: Number, default: 0 },
 
     // bonuse : (fineAmount)=>{
     //     // calculate the bonus value of the fineAmount

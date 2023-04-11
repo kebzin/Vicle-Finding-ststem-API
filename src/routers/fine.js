@@ -9,9 +9,12 @@ const {
   getAllFineMyFine,
   DeletingFine,
   GetSingleFine,
+  updateFine,
 } = require("../controllers/fine");
 
 router.get("/single/:id", GetSingleFine);
+router.put("/single/:id", updateFine);
+
 router.use(verifyJWT);
 router.post("/fine/:id", Fine);
 router.get("/fine", getAllFne);

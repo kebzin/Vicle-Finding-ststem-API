@@ -104,6 +104,29 @@ const GetSingleFine = async (req, res) => {
     console.log(err);
   }
 };
+// update  fine
+const updateFine = async (req, res) => {
+  const id = req.params.id;
+  const content = req.body;
+  try {
+    const UpdateItem = await Fines.findById({ _id: id }).exec();
+    if (!UpdateItem)
+      return res.status(404).json({ message: "No Match found for id " + id });
+    const UpdatePrice = await Fines.findByIdAndUpdate(
+      { _id: id },
+      {
+        ...content,
+      },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "Payment Have been Made successfully" });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 module.exports = {
   Fine,
@@ -111,4 +134,5 @@ module.exports = {
   getAllFineMyFine,
   DeletingFine,
   GetSingleFine,
+  updateFine,
 };

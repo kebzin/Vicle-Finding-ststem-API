@@ -4,9 +4,25 @@ const Transaction = require("../models/transaction");
 
 // getting all the offesers
 const getOffesers = async (req, res) => {
+  const startDate = new Date("2023-03-02");
+  const endDate = new Date("2022-4-1");
+
   try {
     const Officers = await offesers.find().lean().exec();
     if (!Officers) return "There is no officers available";
+    const currentYear = new Date().getFullYear().toString();
+    const currentMonth = (new Date().getMonth() + 1).toString();
+
+    // Filter data to keep only objects created this month
+    Officers.filter((obj) => {
+      const createdAt = new Date(obj.createdAt);
+      console.log(createdAt);
+      return (
+        createdAt.getFullYear().toString() === currentYear &&
+        (createdAt.getMonth() + 1).toString() === currentMonth
+      );
+    });
+    console.log(Officers);
 
     res.status(200).json(Officers);
   } catch (error) {
