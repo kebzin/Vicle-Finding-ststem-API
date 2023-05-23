@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 // register officer function
 const registerOfficer = async (req, res, next) => {
   const content = req.body;
+
   try {
     // checking if the user exist befor adding
     const Officers = await officers
@@ -22,24 +23,23 @@ const registerOfficer = async (req, res, next) => {
     // hashing the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(content.password, salt);
+    console.log("has", hashedPassword);
 
     // add the user to the database
     const newOfficer = await officers.create({
       firstName: content.firstName,
       lastName: content.lastName,
-      middleName: content.middleName,
       email: content.email,
       password: hashedPassword,
       role: content.role,
       PoliceStation: content.PoliceStation,
-
       location: content.location,
       PhoneNumber: content.PhoneNumber,
-      rank: content.Rank,
+      rank: content.rank,
     });
     await newOfficer.save();
     res.status(201).json({
-      message: `created "${newOfficer.email}". This email address will become your new User ID. it Cannot be change late`,
+      message: `created "${newOfficer.email}". This email address will become your new User ID. it Cannot be change later`,
     });
   } catch (error) {
     // if the user dident adde succesfully

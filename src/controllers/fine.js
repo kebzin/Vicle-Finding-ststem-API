@@ -18,11 +18,17 @@ const Fine = async (request, response, next) => {
         message: "user not found",
       });
     }
+    // calculating the percentage
+    const percentage = content.percentage;
+    const number = content.fineAmount;
+    const decimal = percentage / 100;
+    const bonuse = decimal * number;
 
     // making fine
     const Fine = await Fines.create({
       officerId: id,
       ...content,
+      bonus: bonuse,
     });
     console.log("content", content);
     // await Fine.save();
@@ -76,12 +82,24 @@ const getAllFineMyFine = async (req, res) => {
 const DeletingFine = async (req, res) => {
   const id = req.params.id;
   const content = req.body;
+  console.log(id);
+  console.log("content", content);
   try {
     const fine = await Fines.findByIdAndDelete({ _id: id });
     if (!fine)
       return res.status(404).json({
         message: "Didn't delete , because there was no matching found",
       });
+
+    const OFFICERS = await officers.findById({ _id: content.officerId });
+    console.log("offier", OFFICERS);
+    const fineIndex = OFFICERS.fines.findIndex((fine) => fine._id === id);
+    console.log("fineindex", fineIndex);
+    if (fineIndex !== -1) {
+      OFFICERS.fines.splice(fineIndex, 1);
+
+      await OFFICERS.save();
+    }
 
     res.status(200).json({ message: " Deleted successfully" });
   } catch (error) {
@@ -120,9 +138,16 @@ const updateFine = async (req, res) => {
       { new: true }
     );
 
-    return res
-      .status(200)
-      .json({ message: "Payment Have been Made successfully" });
+    // if (
+    //   UpdatePrice.amountPaid === UpdatePrice.fineAmount.replace(/[^\d.-]/g, "")
+    // ) {
+    //   Fines.findByIdAndUpdate(
+    //     { _id: id },
+    //     { status: "CompleteD" },
+    //     { new: true }
+    //   );
+    // }
+    res.status(200).json({ message: "Payment Have been Made successfully" });
   } catch (error) {
     console.log(error.message);
   }

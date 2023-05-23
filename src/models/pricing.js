@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 const PricingSchema = new mongoose.Schema(
   {
     OffenceName: {
-      type: "string",
+      type: String,
     },
     OffencePrice: {
       type: Number,
     },
     AdminID: { type: "string" },
-    OffenceCategory: { type: "string" },
+    OffenceCategory: { type: String },
   },
   { timestamps: true }
 );

@@ -11,10 +11,11 @@ const finedSchema = new mongoose.Schema(
     Longitude: { type: String, default: "" },
     Latitude: { type: String, default: "" },
     discription: { type: String },
-    status: { type: String, default: "pending" },
+    status: { type: String, default: "Pending" },
     wanted: { type: Boolean },
     category: { type: String, default: "" },
     amountPaid: { type: Number, default: 0 },
+    bonus: { type: String, default: 0 },
 
     // bonuse : (fineAmount)=>{
     //     // calculate the bonus value of the fineAmount

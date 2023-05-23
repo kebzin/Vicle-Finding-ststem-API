@@ -7,11 +7,14 @@ const {
   logout,
   refresh,
 } = require("../controllers/Autentication");
+const verifyJWT = require("../middleware/verifyjwt");
 
 // implementing the routh
-router.post("/register", registerOfficer);
+
 router.post("/login", login);
 router.post("/logout", logout);
 router.get("/refresh", refresh);
 
+router.use(verifyJWT);
+router.post("/register", registerOfficer);
 module.exports = router;

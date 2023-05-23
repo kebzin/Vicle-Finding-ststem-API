@@ -16,13 +16,11 @@ const getOffesers = async (req, res) => {
     // Filter data to keep only objects created this month
     Officers.filter((obj) => {
       const createdAt = new Date(obj.createdAt);
-      console.log(createdAt);
       return (
         createdAt.getFullYear().toString() === currentYear &&
         (createdAt.getMonth() + 1).toString() === currentMonth
       );
     });
-    console.log(Officers);
 
     res.status(200).json(Officers);
   } catch (error) {
@@ -61,7 +59,7 @@ const deleteOffeser = async (req, res) => {
     const Fines = await Fine.find({ officerId: content.officerId });
     if (Fines.length > 0) {
       Fines.forEach((fine) => {
-        fine.remove();
+        fine.delete();
       });
     }
     // delete deleting all transaction made by the user trnsaction
