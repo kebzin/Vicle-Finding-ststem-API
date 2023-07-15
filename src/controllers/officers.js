@@ -43,42 +43,26 @@ const getSingleOffeser = async (req, res) => {
   }
 };
 
-// deleting officers
+// deleting officers and the assosiated with the
 const deleteOffeser = async (req, res) => {
   const id = req.params.id;
   const content = req.body;
   try {
-    const Offeser = await offesers.findByIdAndRemove({ _id: id }).exec();
-    if (!Offeser) return res.status(400).json({ message: "user not found" });
-    if (!Offeser._id === { officerId: content.officerId })
+    const officer = await offesers.findByIdAndRemove(id).exec();
+    if (!officer) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    if (officer.officerId !== content.officerId) {
       return res
         .status(404)
-        .json({ message: "you are not allowed authenticated to remove " });
-
-    // deleting all the fine mader by an officers
-    const Fines = await Fine.find({ officerId: content.officerId });
-    if (Fines.length > 0) {
-      Fines.forEach((fine) => {
-        fine.delete();
-      });
+        .json({ message: "You are not authorized to remove this officer" });
     }
-    // delete deleting all transaction made by the user trnsaction
-    const transactions = await Transaction.find({
-      officerId: content.officerId,
-    });
-    if (transactions.length > 0) {
-      transactions.forEach((transaction) => {
-        transaction.remove();
-      });
-    }
-
+    // Deleting all fines made by the officer
+    await Fine.deleteMany({ officerId: content.officerId });
+    // Deleting all transactions made by the officer
+    await Transaction.deleteMany({ officerId: content.officerId });
     return res.status(200).json({
-      message: "user deleted successfully",
-      data: Offeser,
-      transaction: "transaction deleted successfully",
-      transactiondata: transactions,
-      fine: "all fine delete successfully",
-      finedata: Fines,
+      message: "User deleted successfully",
     });
   } catch (error) {
     console.log(error.message);
