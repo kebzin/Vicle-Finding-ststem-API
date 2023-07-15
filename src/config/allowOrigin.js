@@ -2,7 +2,7 @@
 
 const allowOrigin = [
   "https://venchfindsystem.onrender.com/",
-  "http://localhost:3000",
+  // "http://localhost:3000",
 ];
 
 module.exports = allowOrigin;
