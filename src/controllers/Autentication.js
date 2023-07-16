@@ -112,9 +112,7 @@ const login = async (req, res, next) => {
     //   .status(200)
     //   .json({ message: "Login successfull.....!", officer: Officers });
   } catch (e) {
-    console.log(e);
-    next(e);
-    return res.status(500).json({ message: e.message });
+    return res.status(500).json({ message: e });
   }
 };
 
