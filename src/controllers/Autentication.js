@@ -96,10 +96,10 @@ const login = async (req, res, next) => {
 
     //creat secure cookies
     res.cookie("jwt", refreshToken, {
-      httpOnly: false,
-      secure: false,
-      sameSite: "None",
-      maxAge: 7 * 24 * 60 * 60 * 1000, //cookies expiration in 7 days
+      httpOnly: true, //accessible only by web server 
+        secure: true, //https
+        sameSite: 'None', //cross-site cookie 
+        maxAge: 7 * 24 * 60 * 60 * 1000 //cookie expiry: set to match rT
     });
 
     // Send accessToke containing the user information
@@ -112,9 +112,7 @@ const login = async (req, res, next) => {
     //   .status(200)
     //   .json({ message: "Login successfull.....!", officer: Officers });
   } catch (e) {
-    console.log(e);
-    next(e);
-    return res.status(500).json({ message: e.message });
+    return res.status(500).json({ message: e });
   }
 };
 
