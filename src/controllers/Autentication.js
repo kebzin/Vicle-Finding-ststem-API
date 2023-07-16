@@ -96,8 +96,8 @@ const login = async (req, res, next) => {
 
     //creat secure cookies
     res.cookie("jwt", refreshToken, {
-      httpOnly: false,
-      secure: false,
+      httpOnly: true,
+      secure: true,
       sameSite: "None",
       maxAge: 7 * 24 * 60 * 60 * 1000, //cookies expiration in 7 days
     });
