@@ -16,9 +16,7 @@ const createMessage = async (req, res) => {
     ReciverID: content.ReciverID,
     MessageContent: content.MessageContent,
   });
-  console.log("senderid", content.SenderID, "recipientid", content.RecipientID);
-  console.log("ReciverID", content.ReciverID);
-  console.log("MessageContent", content.MessageContent);
+
   res.status(200).json({ message: "Message Sent successfully" });
   try {
   } catch (error) {

@@ -5,11 +5,9 @@ const transaction = require("../models/transaction");
 const dotenv = require("dotenv");
 
 // cerating officer fine function
-const Fine = async (request, response, next) => {
+const Fine = async (request, response) => {
   const content = request.body;
   const id = request.params.id;
-
-  console.log(content.officerId);
 
   try {
     const officersID = await officers.findById({ _id: id });
