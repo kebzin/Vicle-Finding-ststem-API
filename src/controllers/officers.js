@@ -77,7 +77,7 @@ const updateOffeser = async (req, res) => {
   try {
     const user = await offesers.findById({ _id: id });
     if (!user) return res.status(404).json({ message: "User not found" });
-    offesers.findByIdAndUpdate({ _id: id }, content, { new: true }).exec();
+    offesers.findByIdAndUpdate({ _id: id }, ...content, { new: true }).exec();
     res.status(200).json({ message: "update successfully" });
   } catch (error) {
     console.log();

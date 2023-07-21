@@ -9,10 +9,10 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const dotenv = require("dotenv").config();
 const corssOption = require("./config/corsOption");
-const { default: mongoose } = require("mongoose");
 const Price = require("./routers/pricing");
 const Driver = require("./routers/drivers");
 const Message = require("./routers/Messsage");
+const Category = require("./routers/Category");
 
 // middleware
 app.use(Logger);
@@ -29,6 +29,7 @@ app.use("/api/fine", Fine);
 app.use("/api/officers", officers);
 app.use("/api/driver", Driver);
 app.use("/api/message", Message);
+app.use("/api/category", Category);
 
 // Connect to Database
 void (async () => {

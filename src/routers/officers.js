@@ -19,7 +19,7 @@ router.put("/officers/:id", updateOffeser);
 router.post("/wanted/:id", CreatWanted);
 router.post("/upload", upload.single("selectedFile"), (req, res) => {
   const file = req.file;
-  console.log(req);
+  console.log(req.file);
   res.status(200).json(file.fieldname);
 });
 

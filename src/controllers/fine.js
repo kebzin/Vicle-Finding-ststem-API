@@ -80,8 +80,6 @@ const getAllFineMyFine = async (req, res) => {
 const DeletingFine = async (req, res) => {
   const id = req.params.id;
   const content = req.body;
-  console.log(id);
-  console.log("content", content);
   try {
     const fine = await Fines.findByIdAndDelete({ _id: id });
     if (!fine)
