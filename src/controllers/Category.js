@@ -15,12 +15,10 @@ const Addcategory = async (req, res) => {
       });
     }
 
-    const category = await category.create({
+    const Category = await category.create({
       ...content,
     });
-    return res
-      .status(200)
-      .json({ mesaage: "succesfully added", category: category });
+    return res.status(200).json({ mesaage: "succesfully added" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

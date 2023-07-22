@@ -18,6 +18,6 @@ CategorySchema.set("toJSON", {
     return retornObject;
   },
 });
-const Category = mongoose.model("drivers", CategorySchema);
+const Category = mongoose.model("category", CategorySchema);
 
 module.exports = Category;
