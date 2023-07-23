@@ -27,7 +27,7 @@ const Fine = async (request, response) => {
       officerId: id,
       ...content,
       bonus: bonuse,
-    }).populate("officerId");
+    });
 
     // await Fine.save();
     // const drivers = await Drivers.create({
