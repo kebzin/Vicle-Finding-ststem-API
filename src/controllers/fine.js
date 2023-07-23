@@ -27,8 +27,8 @@ const Fine = async (request, response) => {
       officerId: id,
       ...content,
       bonus: bonuse,
-    });
-    console.log("content", content);
+    }).populate("officerId");
+
     // await Fine.save();
     // const drivers = await Drivers.create({
     //   FineID: (content.FineID = Fine._id),
@@ -44,9 +44,7 @@ const Fine = async (request, response) => {
     officersID.transactions = officersID.transactions.concat(Trnsaction._id);
     officersID.save();
 
-    return response
-      .status(200)
-      .json({ messsage: Fine, transactions: Trnsaction });
+    return response.status(200).json({ Fine });
   } catch (error) {
     console.log(error);
     return response.status(500).json({
