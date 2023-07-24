@@ -13,6 +13,7 @@ const Price = require("./routers/pricing");
 const Driver = require("./routers/drivers");
 const Message = require("./routers/Messsage");
 const Category = require("./routers/Category");
+const path = require("path");
 
 // middleware
 app.use(Logger);
@@ -21,6 +22,15 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(express.urlencoded({ extended: true }));
+// Serve static assets from the "build" folder (your React app build)
+app.use(express.static(path.join(__dirname, "vench-finding-systeem/build")));
+
+// Define a catch-all route to serve the React app's main HTML file
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "vench-finding-systeem/build", "index.html")
+  );
+});
 
 // routs
 app.use("/api/price", Price);
