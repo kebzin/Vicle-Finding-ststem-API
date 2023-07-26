@@ -23,7 +23,6 @@ const registerOfficer = async (req, res, next) => {
     // hashing the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(content.password, salt);
-    console.log("has", hashedPassword);
 
     // add the user to the database
     const newOfficer = await officers.create({
@@ -85,13 +84,13 @@ const login = async (req, res, next) => {
         },
       },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "2m" }
+      { expiresIn: "1d" }
     );
     // refresh token
     const refreshToken = jwt.sign(
       { id: Officers._id },
       process.env.Refresh_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "2d" }
     );
 
     //creat secure cookies
