@@ -14,6 +14,7 @@ const Driver = require("./routers/drivers");
 const Message = require("./routers/Messsage");
 const Category = require("./routers/Category");
 const Teller = require("./routers/Teller");
+const PoliceStation = require("./routers/PoliceStation");
 // const path = require("path");
 
 // middleware
@@ -43,6 +44,7 @@ app.use("/api/driver", Driver);
 app.use("/api/message", Message);
 app.use("/api/category", Category);
 app.use("/api/teller", Teller);
+app.use("/api/station", PoliceStation);
 
 // Connect to Database
 void (async () => {
