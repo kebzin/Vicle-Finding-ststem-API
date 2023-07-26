@@ -86,9 +86,8 @@ const DeletingFine = async (req, res) => {
       });
 
     const OFFICERS = await officers.findById({ _id: content.officerId });
-    console.log("offier", OFFICERS);
+
     const fineIndex = OFFICERS.fines.findIndex((fine) => fine._id === id);
-    console.log("fineindex", fineIndex);
     if (fineIndex !== -1) {
       OFFICERS.fines.splice(fineIndex, 1);
 
@@ -132,15 +131,6 @@ const updateFine = async (req, res) => {
       { new: true }
     );
 
-    // if (
-    //   UpdatePrice.amountPaid === UpdatePrice.fineAmount.replace(/[^\d.-]/g, "")
-    // ) {
-    //   Fines.findByIdAndUpdate(
-    //     { _id: id },
-    //     { status: "CompleteD" },
-    //     { new: true }
-    //   );
-    // }
     res.status(200).json({ message: "Payment Have been Made successfully" });
   } catch (error) {
     console.log(error.message);

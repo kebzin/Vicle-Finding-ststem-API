@@ -13,6 +13,7 @@ const Price = require("./routers/pricing");
 const Driver = require("./routers/drivers");
 const Message = require("./routers/Messsage");
 const Category = require("./routers/Category");
+const Teller = require("./routers/Teller");
 // const path = require("path");
 
 // middleware
@@ -41,6 +42,7 @@ app.use("/api/officers", officers);
 app.use("/api/driver", Driver);
 app.use("/api/message", Message);
 app.use("/api/category", Category);
+app.use("/api/teller", Teller);
 
 // Connect to Database
 void (async () => {

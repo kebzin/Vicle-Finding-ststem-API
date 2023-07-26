@@ -17,6 +17,7 @@ const finedSchema = new mongoose.Schema(
     amountPaid: { type: Number, default: 0 },
     bonus: { type: String, default: 0 },
     fineCategory: { type: String, default: "", require: true },
+    tellerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tellers" }],
 
     // bonuse : (fineAmount)=>{
     //     // calculate the bonus value of the fineAmount

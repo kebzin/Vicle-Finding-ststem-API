@@ -4,6 +4,7 @@ const offesers = require("../models/officers");
 // adding category function
 const Addcategory = async (req, res) => {
   const content = req.body;
+  console.log(content);
   const User = await offesers.findById(content.officerId);
   try {
     if (!User) {
@@ -30,8 +31,8 @@ const Addcategory = async (req, res) => {
 //  get all the category
 const getAllcategory = async (req, res) => {
   try {
-    const category = await category.find();
-    res.json(category);
+    const Category = await category.find();
+    res.json(Category);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message });
@@ -40,7 +41,6 @@ const getAllcategory = async (req, res) => {
 
 // delete category funcion
 const deletecategory = async (req, res) => {
-  const content = req.body;
   const id = req.params.id;
   try {
     const Deletecategory = await category.findByIdAndDelete({ _id: id });
