@@ -4,6 +4,7 @@ const BankSchema = new mongoose.Schema(
   {
     Bank: { type: "string", default: "", require: "true" },
     officerId: { type: mongoose.Schema.Types.ObjectId, ref: "officers" },
+    Region: { type: "string", default: "", require: "true" },
   },
   { timestamps: true }
 );

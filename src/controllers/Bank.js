@@ -1,10 +1,10 @@
-const category = require("../models/category");
+const Bank = require("../models/Banks");
 const offesers = require("../models/officers");
 
 // adding category function
-const Addcategory = async (req, res) => {
+const AddBank = async (req, res) => {
   const content = req.body;
-  console.log(content);
+
   const User = await offesers.findById(content.officerId);
   try {
     if (!User) {
@@ -16,10 +16,10 @@ const Addcategory = async (req, res) => {
       });
     }
 
-    const Category = await category.create({
+    await Bank.create({
       ...content,
     });
-    return res.status(200).json({ mesaage: "succesfully added" });
+    return res.status(200).json({ message: "succesfully added" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -29,10 +29,10 @@ const Addcategory = async (req, res) => {
 };
 
 //  get all the category
-const getAllcategory = async (req, res) => {
+const GetAllBank = async (req, res) => {
   try {
-    const Category = await category.find();
-    res.json(Category);
+    const bank = await Bank.find();
+    res.json(bank);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message });
@@ -40,10 +40,10 @@ const getAllcategory = async (req, res) => {
 };
 
 // delete category funcion
-const deletecategory = async (req, res) => {
+const DeleteBank = async (req, res) => {
   const id = req.params.id;
   try {
-    const Deletecategory = await category.findByIdAndDelete({ _id: id });
+    await Bank.findByIdAndDelete({ _id: id });
     res.status(200).json({ message: "Delete Succesfull" });
   } catch (error) {
     console.log(error.message);
@@ -52,23 +52,22 @@ const deletecategory = async (req, res) => {
 };
 
 // update category
-const updatecategory = async (req, res) => {
-  const content = req.body;
-  const id = req.params.id;
-  try {
-    const user = await offesers.findById({ _id: id });
-    if (!user) return res.status(404).json({ message: "User not found" });
-    category.findByIdAndUpdate({ _id: id }, ...content, { new: true }).exec();
-    res.status(200).json({ message: "update successfully" });
-  } catch (error) {
-    console.log();
-    res.status(500).json({ message: error.message });
-  }
-};
+// const updatecategory = async (req, res) => {
+//   const content = req.body;
+//   const id = req.params.id;
+//   try {
+//     const user = await offesers.findById({ _id: id });
+//     if (!user) return res.status(404).json({ message: "User not found" });
+//     category.findByIdAndUpdate({ _id: id }, ...content, { new: true }).exec();
+//     res.status(200).json({ message: "update successfully" });
+//   } catch (error) {
+//     console.log();
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 module.exports = {
-  Addcategory,
-  getAllcategory,
-  deletecategory,
-  updatecategory,
+  AddBank,
+  GetAllBank,
+  DeleteBank,
 };
