@@ -90,7 +90,7 @@ const login = async (req, res, next) => {
     const refreshToken = jwt.sign(
       { id: Officers._id },
       process.env.Refresh_TOKEN_SECRET,
-      { expiresIn: "2d" }
+      { expiresIn: "2h" }
     );
 
     //creat secure cookies
