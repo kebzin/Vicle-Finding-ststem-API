@@ -1,4 +1,5 @@
 const Bank = require("../models/Banks");
+const Bonus = require("../models/Bonus");
 const offesers = require("../models/officers");
 
 // adding category function
@@ -66,8 +67,20 @@ const DeleteBank = async (req, res) => {
 //   }
 // };
 
+const GetBonus = async (req, res) => {
+  try {
+    const bonus = await Bonus.find();
+    if (!bonus) {
+      return res.status(404).json({ message: "bonus not found" });
+    }
+    res.json(bonus);
+  } catch (error) {
+    console.log(error);
+  }
+};
 module.exports = {
   AddBank,
   GetAllBank,
   DeleteBank,
+  GetBonus,
 };

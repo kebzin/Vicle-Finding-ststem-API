@@ -1,8 +1,53 @@
 const Fines = require("../models/fine");
-const Drivers = require("../models/drivers");
+const Bonus = require("../models/Bonus");
 const officers = require("../models/officers");
 const transaction = require("../models/transaction");
 const dotenv = require("dotenv");
+const { Types } = require("mongoose");
+// creating bonus
+const AddBonus = async (req, res) => {
+  const content = req.body;
+  console.log(content);
+  try {
+    const bonus = await Bonus.create({ ...content });
+    console.log(bonus);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const UpadteBunus = async (req, res) => {
+  const id = req.params.id;
+  const content = req.body;
+  try {
+    const UpdateItem = await Bonus.findById({ _id: id }).exec();
+    if (!UpdateItem)
+      return res.status(404).json({ message: "No Match found for id " + id });
+    await Bonus.findByIdAndUpdate(
+      { _id: id },
+      {
+        ...content,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Update successfully" });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const GetBonus = async () => {
+  try {
+    const data = await Bonus.find();
+    if (!data) {
+      return res.status(404).json({ message: "Bonus not found" });
+    }
+    return res.status(200).json(data);
+  } catch (error) {}
+};
 
 // cerating officer fine function
 const Fine = async (request, response) => {
@@ -16,17 +61,33 @@ const Fine = async (request, response) => {
         message: "user not found",
       });
     }
-    // calculating the percentage
-    const percentage = content.percentage;
+    const bonus = await Bonus.find();
+
+    // if (!Array.isArray(bonus) || !bonus[0].hasOwnProperty("Bonus")) {
+    //   console.error("Error: Invalid bonus data");
+    //   return;
+    // }
+
+    const selecting = bonus[0].Bonus;
+    const percentage = selecting;
+    console.log("bonus", percentage);
+
+    // if (isNaN(percentage)) {
+    //   console.error("Error: Invalid percentage value");
+    //   return;
+    // }
+
     const number = content.fineAmount;
-    const decimal = percentage / 100;
-    const bonuse = decimal * number;
+    const Price = number.split(" ");
+    const ActualPrice = Price[1];
+    const passActualPriceToInterger = parseInt(ActualPrice);
+    const amount = (passActualPriceToInterger * selecting) / 100;
 
     // making fine
     const Fine = await Fines.create({
       officerId: id,
       ...content,
-      bonus: bonuse,
+      bonus: amount,
     });
 
     // await Fine.save();
@@ -44,7 +105,7 @@ const Fine = async (request, response) => {
     officersID.transactions = officersID.transactions.concat(Trnsaction._id);
     officersID.save();
 
-    return response.status(200).json({ Fine });
+    return response.status(200).json({ message: "fie succesfull" });
   } catch (error) {
     console.log(error);
     return response.status(500).json({
@@ -78,25 +139,46 @@ const getAllFineMyFine = async (req, res) => {
 const DeletingFine = async (req, res) => {
   const id = req.params.id;
   const content = req.body;
+  console.log(content);
   try {
+    // Find and delete the fine
     const fine = await Fines.findByIdAndDelete({ _id: id });
-    if (!fine)
+    if (!fine) {
       return res.status(404).json({
-        message: "Didn't delete , because there was no matching found",
+        message: "Didn't delete, because there was no matching fine found",
       });
-
-    const OFFICERS = await officers.findById({ _id: content.officerId });
-
-    const fineIndex = OFFICERS.fines.findIndex((fine) => fine._id === id);
-    if (fineIndex !== -1) {
-      OFFICERS.fines.splice(fineIndex, 1);
-
-      await OFFICERS.save();
     }
 
-    res.status(200).json({ message: " Deleted successfully" });
+    // Find the officer to update the fines array
+    const OFFICER = await officers.findById({ _id: content.officerId });
+
+    // Log id and officerFine values for comparison check
+
+    // OFFICER.fines.forEach((officerFine, index) => {
+    //   console.log(`officers.fines[${index}]:`, officerFine);
+    // });
+
+    // Find the index of the fine to be removed in the officer's fines array
+    const fineIndex = OFFICER.fines.findIndex((officerFine) =>
+      officerFine.equals(id)
+    );
+    console.log("fine index", fineIndex);
+
+    if (fineIndex !== -1) {
+      // Remove the fine from the officer's fines array
+      OFFICER.fines.splice(fineIndex, 1);
+      console.log("removed");
+
+      // Save the updated officer data
+      await OFFICER.save();
+    }
+
+    res.status(200).json({ message: "Fine deleted successfully" });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res
+      .status(500)
+      .json({ message: "An error occurred while deleting the fine." });
   }
 };
 
@@ -144,4 +226,7 @@ module.exports = {
   DeletingFine,
   GetSingleFine,
   updateFine,
+  GetBonus,
+  UpadteBunus,
+  AddBonus,
 };

@@ -15,7 +15,7 @@ const finedSchema = new mongoose.Schema(
     wanted: { type: Boolean },
     category: { type: String, default: "" },
     amountPaid: { type: Number, default: 0 },
-    bonus: { type: String, default: 0 },
+    bonus: { type: Number, default: 0 },
     fineCategory: { type: String, default: "", require: true },
     tellerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tellers" }],
 
