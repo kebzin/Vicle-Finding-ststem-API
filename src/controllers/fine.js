@@ -105,7 +105,7 @@ const Fine = async (request, response) => {
     officersID.transactions = officersID.transactions.concat(Trnsaction._id);
     officersID.save();
 
-    return response.status(200).json({ message: "fie succesfull" });
+    return response.status(200).json(Fine);
   } catch (error) {
     console.log(error);
     return response.status(500).json({
