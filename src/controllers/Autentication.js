@@ -38,7 +38,7 @@ const registerOfficer = async (req, res, next) => {
     });
     await newOfficer.save();
     res.status(201).json({
-      message: `created "${newOfficer.email}". This email address will become your new User ID. it Cannot be change later`,
+      message: `User "${newOfficer.email}". is  successfully Created. it Cannot be change later`,
     });
   } catch (error) {
     // if the user dident adde succesfully
@@ -145,14 +145,13 @@ const refresh = async (req, res) => {
 // logout
 const logout = async (req, res) => {
   const cookies = req.cookies;
-  console.log(cookies);
 
   try {
     if (!cookies?.jwt) return res.sendStatus(204); // not connected yet
     res.clearCookie("jwt", {
-      httpOnly: false,
+      httpOnly: true,
       sameSite: "None",
-      secure: false,
+      secure: true,
     });
     res.json({ message: "cookies cleared" });
   } catch (error) {

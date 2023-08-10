@@ -16,6 +16,7 @@ const Category = require("./routers/Category");
 const Teller = require("./routers/Teller");
 const PoliceStation = require("./routers/PoliceStation");
 const Bank = require("./routers/Banks");
+const Wanted = require("./routers/Wanted");
 // const path = require("path");
 
 // middleware
@@ -47,6 +48,7 @@ app.use("/api/category", Category);
 app.use("/api/teller", Teller);
 app.use("/api/station", PoliceStation);
 app.use("/api/bank", Bank);
+app.use("/api/wanted", Wanted);
 
 // Connect to Database
 void (async () => {

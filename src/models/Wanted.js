@@ -13,7 +13,7 @@ const WantedSchema = new mongoose.Schema(
     description: { type: String },
     age: { type: Number },
     color: { type: String },
-    image: { type: String },
+    imageURi: [{ type: String, required: true, default: "" }],
     officersid: { type: mongoose.Schema.Types.ObjectId, ref: "officers" },
   },
   { timestamps: true }

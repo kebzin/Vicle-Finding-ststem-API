@@ -2,8 +2,7 @@ const Fines = require("../models/fine");
 const Bonus = require("../models/Bonus");
 const officers = require("../models/officers");
 const transaction = require("../models/transaction");
-const dotenv = require("dotenv");
-const { Types } = require("mongoose");
+
 // creating bonus
 const AddBonus = async (req, res) => {
   const content = req.body;
@@ -63,20 +62,7 @@ const Fine = async (request, response) => {
     }
     const bonus = await Bonus.find();
 
-    // if (!Array.isArray(bonus) || !bonus[0].hasOwnProperty("Bonus")) {
-    //   console.error("Error: Invalid bonus data");
-    //   return;
-    // }
-
     const selecting = bonus[0].Bonus;
-    const percentage = selecting;
-    console.log("bonus", percentage);
-
-    // if (isNaN(percentage)) {
-    //   console.error("Error: Invalid percentage value");
-    //   return;
-    // }
-
     const number = content.fineAmount;
     const Price = number.split(" ");
     const ActualPrice = Price[1];
@@ -90,11 +76,6 @@ const Fine = async (request, response) => {
       bonus: amount,
     });
 
-    // await Fine.save();
-    // const drivers = await Drivers.create({
-    //   FineID: (content.FineID = Fine._id),
-    //   ...content,
-    // });
     const Trnsaction = await transaction.create({
       officerId: id,
       fineId: (content.fineId = Fine._id),
@@ -152,12 +133,6 @@ const DeletingFine = async (req, res) => {
     // Find the officer to update the fines array
     const OFFICER = await officers.findById({ _id: content.officerId });
 
-    // Log id and officerFine values for comparison check
-
-    // OFFICER.fines.forEach((officerFine, index) => {
-    //   console.log(`officers.fines[${index}]:`, officerFine);
-    // });
-
     // Find the index of the fine to be removed in the officer's fines array
     const fineIndex = OFFICER.fines.findIndex((officerFine) =>
       officerFine.equals(id)
@@ -186,11 +161,13 @@ const DeletingFine = async (req, res) => {
 const GetSingleFine = async (req, res) => {
   const id = req.params.id;
   try {
-    const fine = await Fines.findById({ _id: id }).populate("officerId");
+    const fine = await Fines.findById({ _id: id })
+      .populate("officerId")
+      .populate("tellerId");
     if (!fine)
       return res.status(404).json({
         message:
-          "The request Id you passed in is not fount, This is usually because you the Id number yo are comming with is invalid. Pleade check the Id number correctly and try again",
+          "The request Id you passed in is not fount, This is usually because  the Id number you are comming with is invalid. Pleade check the Id number correctly and try again",
       });
     return res.status(200).json(fine);
   } catch (err) {
@@ -212,6 +189,7 @@ const updateFine = async (req, res) => {
       },
       { new: true }
     );
+    UpdateItem.tellerId = UpdateItem.tellerId.concat(content.tellerId);
 
     res.status(200).json({ message: "Payment Have been Made successfully" });
   } catch (error) {
