@@ -1,6 +1,7 @@
 const offesers = require("../models/officers");
 const Fine = require("../models/fine");
 const Transaction = require("../models/transaction");
+const bcrypt = require("bcrypt");
 
 // getting all the offesers
 const getOffesers = async (req, res) => {
@@ -71,17 +72,33 @@ const deleteOffeser = async (req, res) => {
 };
 
 // update user account
+
 const updateOffeser = async (req, res) => {
   const content = req.body;
   const id = req.params.id;
+
   try {
     const user = await offesers.findById({ _id: id });
     if (!user) return res.status(404).json({ message: "User not found" });
-    offesers.findByIdAndUpdate({ _id: id }, ...content, { new: true }).exec();
-    res.status(200).json({ message: "update successfully" });
+
+    if (content.password) {
+      // If the request contains a new password, hash it before updating
+      const hashedPassword = await bcrypt.hash(content.password, 10);
+      content.password = hashedPassword;
+    } else {
+      // Remove the password field from content if it's empty
+      delete content.password;
+    }
+
+    const updatedUser = await offesers
+      .findByIdAndUpdate({ _id: id }, { ...content }, { new: true })
+      .exec();
+
+    console.log(updatedUser);
+    res.status(200).json({ message: "Update successful" });
   } catch (error) {
-    console.log();
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while updating user." });
   }
 };
 
