@@ -12,6 +12,7 @@ const OfficerSchema = new mongoose.Schema(
     status: { type: String, default: "Active" },
     password: { type: String, require: true, default: "" },
     email: { type: String, require: true, default: "" },
+    BatchNumber: { type: String, require: true, default: "" },
     fines: [{ type: mongoose.Schema.Types.ObjectId, ref: "fines" }],
     transactions: [
       { type: mongoose.Schema.Types.ObjectId, ref: "transactions" },

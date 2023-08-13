@@ -1,22 +1,14 @@
 const multer = require("multer");
+const { v2: cloudinary } = require("cloudinary");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "../vench-finding-systeem/public/upload");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
+// Configure Cloudinary with your credentials
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY,
 });
 
-const fileFilter = (req, file, cb) => {
-  // Accept image files only
-  if (file.mimetype.startsWith("image/")) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only image files are allowed!"), false);
-  }
-};
+const storage = multer.memoryStorage(); // Use memory storage for Cloudinary upload
 
 const upload = multer({
   storage: storage,
@@ -25,7 +17,14 @@ const upload = multer({
     fileSize: 1024 * 1024 * 5, // 5MB file size limit
   },
 
-  fileFilter: fileFilter,
-}); // Update to handle multiple files, with a max count of 5
+  fileFilter: (req, file, cb) => {
+    // Accept image files only
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed!"), false);
+    }
+  },
+});
 
 module.exports = upload;

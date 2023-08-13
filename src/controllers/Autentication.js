@@ -35,6 +35,7 @@ const registerOfficer = async (req, res, next) => {
       location: content.location,
       PhoneNumber: content.PhoneNumber,
       rank: content.rank,
+      BatchNumber: content.BatchNumber,
     });
     await newOfficer.save();
     res.status(201).json({

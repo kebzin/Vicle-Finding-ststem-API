@@ -6,7 +6,7 @@ const transaction = require("../models/transaction");
 // creating bonus
 const AddBonus = async (req, res) => {
   const content = req.body;
-  console.log(content);
+
   try {
     const bonus = await Bonus.create({ ...content });
     console.log(bonus);
@@ -120,7 +120,7 @@ const getAllFineMyFine = async (req, res) => {
 const DeletingFine = async (req, res) => {
   const id = req.params.id;
   const content = req.body;
-  console.log(content);
+
   try {
     // Find and delete the fine
     const fine = await Fines.findByIdAndDelete({ _id: id });

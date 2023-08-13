@@ -21,6 +21,7 @@
   "homepage": "https://github.com/kebzin/Vicle-Finding-ststem-API#readme",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "cloudinary": "^1.40.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "date-fns": "^2.29.3",
