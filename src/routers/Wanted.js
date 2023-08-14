@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const verifyJWT = require("../middleware/verifyjwt");
 const upload = require("../middleware/imageUpoad");
+const { v2: cloudinary } = require("cloudinary");
+
 const {
   getAllWanteds,
   getSingleWanted,
@@ -17,16 +19,46 @@ router.post("/wanted", CreatWanted);
 router.get("/wanted", getAllWanteds);
 router.get("/wanted/:id", getSingleWanted);
 router.delete("/wanted/:id", deleteWanted);
-router.post("/upload", upload.array("images", 10), async (req, res) => {
-  // Here, 'image' is the field name from your form
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).json({ error: "No images provided" });
-  }
-  // Handle the uploaded files
-  const imagePaths = req.files.map((file) => file.filename);
 
-  // Process or save the image paths, for example, store in a database
-  res.status(200).json({ message: "Images uploaded successfully", imagePaths });
+router.post("/upload", upload.array("images", 10), async (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No images provided" });
+    }
+
+    const uploadedImages = await Promise.all(
+      req.files.map(async (file) => {
+        try {
+          const uploadResult = await cloudinary.uploader
+            .upload_stream((cloudinaryError, result) => {
+              if (cloudinaryError) {
+                throw cloudinaryError;
+              }
+            })
+            .end(file.buffer);
+
+          return await uploadResult.secure_url;
+        } catch (uploadError) {
+          console.error(
+            "Error uploading image to Cloudinary",
+            uploadError.message
+          );
+          throw uploadError;
+        }
+      })
+    );
+
+    // Process or save the Cloudinary image URLs, for example, store in a database
+    res
+      .status(200)
+      .json({ message: "Images uploaded successfully", uploadedImages });
+  } catch (error) {
+    console.error("Error processing images", error.message);
+    res.status(500).json({ error: "An error occurred" });
+  }
 });
+
+// Export the router
+module.exports = router;
 
 module.exports = router;

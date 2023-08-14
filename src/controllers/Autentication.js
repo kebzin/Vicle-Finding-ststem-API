@@ -59,7 +59,7 @@ const login = async (req, res, next) => {
       return res.status(401).json({ message: "user not found" }); // aunothreize
     }
     // check for user status
-    if (Officers.status === "suspended") {
+    if (Officers.status === "Suspended") {
       return res.status(401).json({
         message:
           "This account  is suspended: Please contacted the administrator for more information.",
