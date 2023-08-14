@@ -5,9 +5,6 @@ const bcrypt = require("bcrypt");
 
 // getting all the offesers
 const getOffesers = async (req, res) => {
-  const startDate = new Date("2023-03-02");
-  const endDate = new Date("2022-4-1");
-
   try {
     const Officers = await offesers.find().lean().exec();
     if (!Officers) return "There is no officers available";
@@ -94,7 +91,6 @@ const updateOffeser = async (req, res) => {
       .findByIdAndUpdate({ _id: id }, { ...content }, { new: true })
       .exec();
 
-    console.log(updatedUser);
     res.status(200).json({ message: "Update successful" });
   } catch (error) {
     console.error(error);
