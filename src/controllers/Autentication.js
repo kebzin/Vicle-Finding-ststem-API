@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const officers = require("../models/officers");
 const dotenv = require("dotenv");
+const Teller = require("../models/tellers");
 
 // register officer function
 const registerOfficer = async (req, res, next) => {
@@ -52,6 +53,7 @@ const registerOfficer = async (req, res, next) => {
 // login function
 const login = async (req, res, next) => {
   const content = req.body;
+
   try {
     // checking for the user befor alowing loin
     const Officers = await officers.findOne({ email: content.email }).exec();
@@ -143,6 +145,102 @@ const refresh = async (req, res) => {
   );
 };
 
+const Tellerrefresh = async (req, res) => {
+  const cookies = req.cookies;
+  if (!cookies?.jwt) return res.status(401).json({ message: "Unauthorized" }); // TODO error message here if token is invalid or expired
+  const refreshToken = cookies.jwt;
+
+  jwt.verify(
+    refreshToken,
+    process.env.Refresh_TOKEN_SECRET,
+    async (error, decode) => {
+      if (error) return res.status(403).json({ message: "forbidden" }); // TODO error message here if token is invalid or expired
+      const foundUser = await Teller.findOne({ id: decode._id });
+      if (!foundUser) return res.status(403).json({ message: "Unauthorized" }); // refresh token will not be available if you are not not found
+      const accessToken = jwt.sign(
+        {
+          userInfo: {
+            id: foundUser._id,
+          },
+        },
+        process.env.TELLER_ACCESS_TOKEN_SECRET,
+        { expiresIn: "1d" }
+      );
+      res.json({ accessToken });
+    }
+  );
+};
+// Teller Login
+const TellerLogin = async (req, res, next) => {
+  const content = req.body;
+  console.log("content", content);
+  try {
+    // checking for the user befor alowing loin
+    const teller = await Teller.findOne({ Email: content.Email }).exec();
+    if (!teller) {
+      return res.status(401).json({ message: "user not found" }); // aunothreize
+    }
+    console.log(teller);
+    // check for user status
+    if (teller.status === "Suspended") {
+      return res.status(401).json({
+        message:
+          "This account  is suspended: Please contacted the administrator for more information.",
+      }); // aunothreize
+    }
+    if (teller.status === "pending") {
+      return res.status(401).json({
+        message:
+          "This account is not being verified: Please contact the administrator for more information",
+      }); // aunothreize
+    }
+    // evaluate password
+    const isMatch = await bcrypt.compare(content.password, teller.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "password does not match" }); // unauthentication
+    }
+
+    // JWT authentication
+    const accessToken = jwt.sign(
+      {
+        userInfo: {
+          id: teller._id,
+        },
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+    // refresh token
+    const refreshToken = jwt.sign(
+      { id: teller._id },
+      process.env.Refresh_TOKEN_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    //creat secure cookies
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 7 * 24 * 60 * 60 * 1000, //cookies expiration in 7 days
+    });
+
+    // Send accessToke containing the user information
+    res.json({ teller, accessToken });
+
+    // return res
+    //   .cookie("access_token", token, {
+    //     httOnly: true,
+    //   })
+    //   .status(200)
+    //   .json({ message: "Login successfull.....!", officer: Officers });
+  } catch (e) {
+    return res.status(500).json({ message: e });
+    console.log(e);
+  }
+};
+
 // logout
 const logout = async (req, res) => {
   const cookies = req.cookies;
@@ -160,4 +258,11 @@ const logout = async (req, res) => {
     return res.status(404).json(error.message);
   }
 };
-module.exports = { registerOfficer, login, logout, refresh };
+module.exports = {
+  registerOfficer,
+  login,
+  logout,
+  refresh,
+  TellerLogin,
+  Tellerrefresh,
+};

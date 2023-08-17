@@ -2,6 +2,7 @@ const Fines = require("../models/fine");
 const Bonus = require("../models/Bonus");
 const officers = require("../models/officers");
 const transaction = require("../models/transaction");
+const tellerHistory = require("../models/TellerHistory");
 
 // creating bonus
 const AddBonus = async (req, res) => {
@@ -182,6 +183,7 @@ const updateFine = async (req, res) => {
     const UpdateItem = await Fines.findById({ _id: id }).exec();
     if (!UpdateItem)
       return res.status(404).json({ message: "No Match found for id " + id });
+
     const UpdatePrice = await Fines.findByIdAndUpdate(
       { _id: id },
       {
@@ -189,11 +191,40 @@ const updateFine = async (req, res) => {
       },
       { new: true }
     );
+
+    // Update the tellerId array by concatenating the new tellerId value(s)
     UpdateItem.tellerId = UpdateItem.tellerId.concat(content.tellerId);
 
-    res.status(200).json({ message: "Payment Have been Made successfully" });
+    // Save the updated fine object
+    await UpdateItem.save();
+
+    // Create a new entry in the tellerHistory collection
+    const tellerHist = await tellerHistory.create({
+      TellerID: content.tellerId, // Assuming content.tellerId is the ObjectId of the teller
+      TransactionID: id,
+      PaidAmount: content.PaidAmount,
+    });
+    UpdateItem.tellerId = UpdateItem.tellerId.concat(content.tellerId);
+    await UpdateItem.save();
+
+    res.status(200).json({ message: "Payment has been made successfully" });
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// const history
+const TellerHistory = async (req, res) => {
+  try {
+    const Histoey = await tellerHistory
+      .find()
+      .populate("TransactionID")
+      .sort("-createdAt");
+    res.send(Histoey);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

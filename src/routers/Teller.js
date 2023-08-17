@@ -9,6 +9,8 @@ const {
   DeleteTeller,
   UpdateTeller,
   CreateTeller,
+  GetTellerhistory,
+  GetHistory,
 } = require("../controllers/Teller");
 
 router.use(verifyJWT);
@@ -17,5 +19,7 @@ router.post("/teller", CreateTeller);
 router.get("/teller", GetTellers);
 router.get("/teller/:id", getSingleOffeser);
 router.delete("/teller/:id", DeleteTeller);
+router.get("/history/:id", GetTellerhistory);
+router.get("/history", GetHistory);
 
 module.exports = router;

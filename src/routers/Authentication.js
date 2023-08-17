@@ -6,6 +6,8 @@ const {
   login,
   logout,
   refresh,
+  TellerLogin,
+  Tellerrefresh,
 } = require("../controllers/Autentication");
 const verifyJWT = require("../middleware/verifyjwt");
 
@@ -14,6 +16,8 @@ const verifyJWT = require("../middleware/verifyjwt");
 router.post("/login", login);
 router.post("/logout", logout);
 router.get("/refresh", refresh);
+router.post("/teller", TellerLogin);
+router.get("/tellerrefresh", Tellerrefresh);
 
 router.use(verifyJWT);
 router.post("/register", registerOfficer);
