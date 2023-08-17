@@ -4,6 +4,7 @@ const allowOrigin = [
   "https://venchfindingsystem.onrender.com",
   "http://localhost:3000",
   "http://localhost:3001",
+  "https://vehicle-payment.onrender.com",
 ];
 
 module.exports = allowOrigin;
