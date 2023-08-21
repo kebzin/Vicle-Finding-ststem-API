@@ -29,15 +29,23 @@ router.post("/upload", upload.array("images", 10), async (req, res) => {
     const uploadedImages = await Promise.all(
       req.files.map(async (file) => {
         try {
-          const uploadResult = await cloudinary.uploader
-            .upload_stream((cloudinaryError, result) => {
-              if (cloudinaryError) {
-                throw cloudinaryError;
-              }
-            })
-            .end(file.buffer);
+          const uploadResult = await new Promise((resolve, reject) => {
+            cloudinary.uploader
+              .upload_stream((cloudinaryError, result) => {
+                if (cloudinaryError) {
+                  console.error(
+                    "Error uploading image to Cloudinary",
+                    cloudinaryError.message
+                  );
+                  reject(cloudinaryError);
+                } else {
+                  resolve(result);
+                }
+              })
+              .end(file.buffer);
+          });
 
-          return await uploadResult.secure_url;
+          return uploadResult.secure_url;
         } catch (uploadError) {
           console.error(
             "Error uploading image to Cloudinary",
@@ -49,9 +57,12 @@ router.post("/upload", upload.array("images", 10), async (req, res) => {
     );
 
     // Process or save the Cloudinary image URLs, for example, store in a database
-    res
-      .status(200)
-      .json({ message: "Images uploaded successfully", uploadedImages });
+
+    // Send response to the client after all images are processed
+    res.status(200).json({
+      message: "Images uploaded successfully",
+      uploadedImages: uploadedImages,
+    });
   } catch (error) {
     console.error("Error processing images", error.message);
     res.status(500).json({ error: "An error occurred" });
