@@ -71,5 +71,3 @@ router.post("/upload", upload.array("images", 10), async (req, res) => {
 
 // Export the router
 module.exports = router;
-
-module.exports = router;

@@ -32,9 +32,9 @@ const getAllWanteds = async (req, res) => {
   try {
     const wanted = await Wanted.find().populate("officersid");
 
-    if (!wanted || wanted.length === 0) {
-      return res.status(404).json({ message: "No wanted records found." });
-    }
+    // if (!wanted || wanted.length === 0) {
+    //   return res.status(404).json([]);
+    // }
 
     return res.status(200).json(wanted);
   } catch (error) {
