@@ -73,7 +73,7 @@ const login = async (req, res, next) => {
           "This account is not being verified: Please contact the administrator for more information",
       }); // aunothreize
     }
-    // evaluate password
+    //evaluate password
     const isMatch = await bcrypt.compare(content.password, Officers.password);
     if (!isMatch) {
       return res.status(401).json({ message: "password does not match" }); // unauthentication
